@@ -252,7 +252,7 @@ function calculate_score(word){
 }
 
 function within_range(row,col){
-	return(row>=0 && row<5 && col>=0 && col<5);
+	return(row>=0 && row<4 && col>=0 && col<4);
 }
 
 var ajacent_dice = [
