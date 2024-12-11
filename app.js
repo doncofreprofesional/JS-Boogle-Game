@@ -6,20 +6,23 @@ var list = [
 'dhlnor','dhlnor','eiiitt','emottt','ensssu',
 'fiprsy','gorrvw','iprrry','nootuw','ooottu'
 ];
+let countdown = 120; // Variable para almacenar el intervalo
+let timeLeft = 120;
 
 var board_generator = []; //2-dimensional array for storing original dice information
 var current_track = []; // keep track of visited dice in selected order
 var clickable = []; // those clickable dice
 var submitted = new Set(); // store submitted words
 
+Counter();
 board_generate();
 board();
 button_event();
 
 
-/* Functions for generating the board */
-function board(){//generate a random 5*5 size board
-	var board = []; // For storing the 5*5 size of board
+//genero el tablero
+function board(){
+	var board = []; // para la
 	var board_temp = [];
 	var dice_arr = [];
 	var upside;
@@ -45,8 +48,8 @@ function board(){//generate a random 5*5 size board
 	//console.log(board);
 
 	//render board on HTML
-	for(var row=0;row<5;row++){
-		for(var col=0;col<5;col++){
+	for(var row=0;row<4;row++){
+		for(var col=0;col<4;col++){
 			character = board[row][col];
 			var button = "<button type='button' class='btn dice'"+"row="+row+" col="+col+">"+ character + "</button>";
 			var row_selector = document.getElementById("row"+row);
@@ -170,16 +173,38 @@ function update_clickable_dice(){
 var current_word = ""; //show current word
 var err_msg = ""; // show error message
 function submit_word(){
+	debugger;
 	if(current_word===""){
-		err_msg = "You need to select a word before submitting!";
+		err_msg = "Necesitas ingresar alguna palabra";
 		document.getElementById('error').innerHTML = err_msg;
-	}else{
-		current_track = [];//reset current_track
-		submitted.add(current_word);
+	}else if (current_word.length<3){
 		current_word = "";
 		document.getElementById('current_word').innerHTML = current_word;
 		update_words();
-		document.getElementById('error').innerHTML = '';
+		err_msg="tenes que poner una palabra de al menos 3 letras, \nte restamos un punto";
+		document.getElementById('error').innerHTML = err_msg;
+		document.getElementById('total-score').innerHTML --;
+	}
+	
+	else{
+		current_track = [];//reset current_track
+		if(VerifyWord(current_word))
+		{
+			submitted.add(current_word);
+			current_word = "";
+			document.getElementById('current_word').innerHTML = current_word;
+			update_words();
+			document.getElementById('error').innerHTML = '';
+		}
+		else{
+			current_word = "";
+			document.getElementById('current_word').innerHTML = current_word;
+			update_words();
+			err_msg="palabra incorrecta, \nte restamos un punto";
+			document.getElementById('total-score').innerHTML --;
+			document.getElementById('error').innerHTML = err_msg;
+
+		}
 	}
 }
 
@@ -244,4 +269,70 @@ function ajacent(row,col){
 			clickable.push([newrow,newcol]);
 		}
 	}
+}
+function VerifyWord(word) {
+	const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
+	
+	return fetch(url)
+	  .then(response => {
+		if (response.ok) {
+		  return true;
+		} else {
+		  return false;
+		}
+	  })
+	  .catch(error => {
+		console.error('Error al obtener los datos:', error);
+		return false;
+	  });
+  }
+
+  function Counter() {
+	clearInterval(countdown); 
+	document.getElementById('timer').textContent = timeLeft;
+
+	countdown = setInterval(() => {
+		timeLeft--;
+		document.getElementById('timer').textContent = timeLeft;
+		if(timeLeft <=20)
+		{
+			document.getElementById('timer').style.color = 'red';
+		}
+		else{
+			document.getElementById('timer').style.color = 'black';
+		}
+		if (timeLeft <= 0) {
+			clearInterval(countdown); // Detiene el temporizador cuando llega a 0
+			document.getElementById('timer').textContent = "¡Tiempo terminado!";
+			document.getElementById('board').style.display ="none";
+		}
+	}, 1000); // Intervalo de 1 segundo (1000 ms)
+}
+
+function StartGame()
+{
+	let nm = document.getElementById('namePlayer').value;
+	nm = 'BIENVENIDO ' + nm;
+	document.getElementById('namePlayerLabel').innerHTML = nm.toUpperCase();
+	document.getElementById('namePlayer').style.display = 'none';
+	document.getElementById('startGame').style.display = 'none';
+}
+
+function sendEmail(event) {
+	event.preventDefault(); // Evita que el formulario se envíe de la manera predeterminada
+
+	// Obtener los valores de los campos
+	const name = document.getElementById('name').value;
+	const email = document.getElementById('email').value;
+	const message = document.getElementById('message').value;
+
+	// Crear el enlace mailto con asunto y cuerpo del mensaje
+	const subject = encodeURIComponent(`Mensaje de ${name}`);
+	const body = encodeURIComponent(`Nombre: ${name}\nCorreo: ${email}\n\nMensaje:\n${message}`);
+
+	// Crear el enlace mailto
+	const mailtoLink = `mailto:correo@ejemplo.com?subject=${subject}&body=${body}`;
+
+	// Abrir la herramienta de envío de emails predeterminada
+	window.location.href = mailtoLink;
 }

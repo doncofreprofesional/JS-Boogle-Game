@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head> 
-	<title>Boggle Game by Alex</title>
+	<title>BOOGLE</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="styles.css">
@@ -8,39 +8,73 @@
 
 <body>
 	<div id="main">
-		<header><img src="logo.png" /></header>
-
-		<div id="board">
-			<div id="row0"></div>
-			<div id="row1"></div>
-			<div id="row2"></div>
-			<div id="row3"></div>
-			<div id="row4"></div>
+		<div>
+			<h1 id="boogle">BOOGLE</h1>
+			<div id="bannerName">
+				<input id="namePlayer" type="text" placeholder="Nombre" name="nombre">
+				<button id="startGame"onclick="StartGame()">Comenzar</button>
+				<label id="namePlayerLabel"></label>
+			</div>
+			<br>
+			<div>
+				<label>TU TIEMPO ES:</label>
+				<div id="timer">10</div>
+			</div>
+			
+			<br>
 		</div>
-		<div id="error"></div>
-		<div id="panel">
-			<div id="left">
-				<div class='msg'>Current Word:<span id="current_word"></span></div>
-				<div id="score-table">
-					<div class="table-title"><span>Word</span><span>Score</span></div>
-					<div id="table_words"></div>
-					<div class="table-total"><span>Total:</span><span id="total-score">0</span></div>
+		<div id="content">
+			<div id="global" >
+			 
+				<div id="board" >
+					<div id="row0"></div>
+					<div id="row1"></div>
+					<div id="row2"></div>
+					<div id="row3"></div>
+						
+
 				</div>
+				<div class="panelContainer">
+					
+					<div id="left" >
+						<div id="panel" >
+								<div class='msg'>Tu palabra es:<span id="current_word"></span></div>
+								<div id="score-table">
+									<div class="table-title"><span>Palabras</span><span>Puntos</span></div>
+									<div id="table_words"></div>
+									<div class="table-total"><span>Total:</span><span id="total-score">0</span></div>
+								</div>
+							</div>
+					</div>	
+					<div id="right">
+						<button type='button' class='btn action_btn' id="submit">Verificar</button>
+						<button type='button' class='btn action_btn restart' onclick="location.reload()">
+							<img src="restart.png" alt="some_text">
+							Reiniciar
+						</button>
+					</div>
+					
+					<div id="error"></div>
+					
+				</div>
+				<form class="contact-form" onsubmit="sendEmail(event)">
+					<h2>Contacto</h2>
+					<input type="text" id="name" placeholder="Nombre" required>
+					<input type="email" id="email" placeholder="Correo Electrónico" required>
+					<textarea id="message" placeholder="Mensaje" rows="4" required></textarea>
+					<button type="submit">Enviar</button>
+				</form>
 			</div>
-
-			<div id="right">
-				<button type='button' class='btn action_btn' id="submit">Submit Word</button>
-				<button type='button' class='btn action_btn restart' onclick="location.reload()">
-					<img src="restart.png" alt="some_text">
-					Restart Game
-				</button>
-			</div>
-		</div>		
-
-		<footer>Developer: Yuhang(Alex) Zhou</footer>
+				
+			
+			
+		</div>
 	</div>
+	<div class="footerF">
+		<label> Creado por Francisco Sofia y Lucas Cofre</label>
+		<a href="https://github.com/doncofreprofesional/JS-Boogle-Game" target="_blank">REPO</a>
 
+	</div>
 	<script type="text/javascript" src="app.js"></script>
 </body>
-
 </html>
