@@ -8,7 +8,7 @@ var list = [
 ];
 let countdown = 120; // Variable para almacenar el intervalo
 let timeLeft = 120;
-
+let errors = 0;
 var board_generator = []; //2-dimensional array for storing original dice information
 var current_track = []; // keep track of visited dice in selected order
 var clickable = []; // those clickable dice
@@ -173,7 +173,6 @@ function update_clickable_dice(){
 var current_word = ""; //show current word
 var err_msg = ""; // show error message
 function submit_word(){
-	debugger;
 	if(current_word===""){
 		err_msg = "Necesitas ingresar alguna palabra";
 		document.getElementById('error').innerHTML = err_msg;
@@ -183,28 +182,31 @@ function submit_word(){
 		update_words();
 		err_msg="tenes que poner una palabra de al menos 3 letras, \nte restamos un punto";
 		document.getElementById('error').innerHTML = err_msg;
-		document.getElementById('total-score').innerHTML --;
+		document.getElementById('total-score').value --;
+		errors ++;
 	}
 	
 	else{
 		current_track = [];//reset current_track
-		if(VerifyWord(current_word))
-		{
-			submitted.add(current_word);
-			current_word = "";
-			document.getElementById('current_word').innerHTML = current_word;
-			update_words();
-			document.getElementById('error').innerHTML = '';
-		}
-		else{
-			current_word = "";
-			document.getElementById('current_word').innerHTML = current_word;
-			update_words();
-			err_msg="palabra incorrecta, \nte restamos un punto";
-			document.getElementById('total-score').innerHTML --;
-			document.getElementById('error').innerHTML = err_msg;
-
-		}
+		callbackword(current_word, (isValid) => {
+			if (isValid) {
+				submitted.add(current_word);
+				current_word = "";
+				document.getElementById('current_word').innerHTML = current_word;
+				update_words();
+				document.getElementById('error').innerHTML = '';
+			} else {
+				current_word = "";
+				document.getElementById('current_word').innerHTML = current_word;
+				update_words();
+				err_msg="palabra incorrecta, \nte restamos un punto";
+				document.getElementById('total-score').value --;
+				document.getElementById('error').innerHTML = err_msg;
+				errors++;
+			}
+		});
+		
+		
 	}
 }
 
@@ -226,6 +228,7 @@ function update_words(){
 		sum += score;
 		document.getElementById('table_words').innerHTML += "<div><span>"+word+"</span>"+"<span>"+score+"</span></div>";
 	}
+	sum -= errors;
 	document.getElementById('total-score').innerHTML = sum;
 }
 
@@ -263,30 +266,28 @@ function ajacent(row,col){
 	for(let neighbor of ajacent_dice){
 		newrow = Number(row)+neighbor[0];
 		newcol = Number(col)+neighbor[1];
-		//console.log(newrow);
 		if(within_range(newrow,newcol)){
-			//this dice can be selected
 			clickable.push([newrow,newcol]);
 		}
 	}
 }
-function VerifyWord(word) {
-	const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
-	
-	return fetch(url)
-	  .then(response => {
-		if (response.ok) {
-		  return true;
-		} else {
-		  return false;
-		}
-	  })
-	  .catch(error => {
-		console.error('Error al obtener los datos:', error);
-		return false;
-	  });
-  }
 
+function VerifyWord(word) {
+    const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
+    
+    return fetch(url)
+        .then(response => response.ok) 
+        .catch(error => {
+            console.error('Error al obtener los datos:', error);
+            return false;
+        });
+}
+
+function callbackword(current_word, callback) {
+    VerifyWord(current_word).then(resultado => {
+        callback(resultado);
+    });
+}
   function Counter() {
 	clearInterval(countdown); 
 	document.getElementById('timer').textContent = timeLeft;
@@ -335,4 +336,9 @@ function sendEmail(event) {
 
 	// Abrir la herramienta de envío de emails predeterminada
 	window.location.href = mailtoLink;
+}
+async function checkWord(word) {
+    const result = await VerifyWord(word);
+
+   return result;
 }
