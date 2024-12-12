@@ -29,7 +29,6 @@ function board(){
 	var row;
 	var character='';
 	shuffle(board_generator);
-	//console.log(board_generator);
 	for(let i=0;i<board_generator.length;i++){
 		dice_arr = board_generator[i];
 		upside = random_face(dice_arr);
@@ -45,9 +44,8 @@ function board(){
 		line.push(board_temp[i+4]);
 		board.push(line);
 	}
-	//console.log(board);
 
-	//render board on HTML
+	//Renderizar el tablero en HTML
 	for(var row=0;row<4;row++){
 		for(var col=0;col<4;col++){
 			character = board[row][col];
@@ -65,10 +63,9 @@ function board_generate(){
 		dice = list[i].toUpperCase().split('');
 		board_generator.push(dice);
 	}
-	//console.log(board_generator);
 }
 
-function shuffle(arr){//function to shuffle the dice
+function shuffle(arr){//Funcion para barajar el dado
 	var j,temp;
 	for(let i=arr.length;i>0;i--){
 		j=Math.floor(Math.random()*i);
@@ -78,14 +75,14 @@ function shuffle(arr){//function to shuffle the dice
 	}
 }
 
-function random_face(arr){//random a upside face from a dice
+function random_face(arr){//Elegir una cara del dado al azar
 	var index = Math.floor(Math.random()*6);
 	var upside_face = arr[index];
 	return upside_face;
 }
 
 
-/* Functions for the gameplay */
+// Funciones del juego
 function button_event(){
 	var row,col,text;
 	var events = document.getElementsByClassName('dice');
@@ -104,12 +101,9 @@ function button_event(){
 			if(current_track.length !== 0){
 				var current_dice = current_track[current_track.length-1];
 				console.log(current_dice);
-				//console.log('current_track'+current_track);
 				ajacent(current_dice[0],current_dice[1]);
-				//console.log('clickable'+clickable);
 				clickable = modify_clickable(clickable,current_track);
 				clickable.push([current_dice[0],current_dice[1]]);
-				//console.log('difference'+clickable);
 			}
 			update_clickable_dice();
 			document.getElementById('current_word').innerHTML = current_word;
@@ -122,22 +116,19 @@ function button_event(){
 	};
 }
 
-function modify_clickable(clickable,current_track){//remove all elements in array clickable contained in array current_track
+function modify_clickable(clickable,current_track){//Remover los elementos  array current_track
 	var dice1 = [];
 	var dice2 = [];
-	var difference = clickable.slice();//make a copy of clickable array
+	var difference = clickable.slice();//hacer una copia del clickable array
 	for(let i=clickable.length-1;i>=0;i--){
 		for(let j=0;j<current_track.length;j++){
 			var dice1 = clickable[i];
 			var dice2 = current_track[j];
-			//console.log(dice1);
-			//console.log(dice2);
 			if( dice1[0] === dice2[0] && dice1[1] === dice2[1] ){
 					difference.splice(i,1);
 			}
 		}
 	}
-	//console.log(difference);
 	return difference;
 }
 
@@ -158,7 +149,7 @@ function update_clickable_dice(){
 			col = Number(event.getAttribute('col'));
 			for(let dice of clickable){
 				if(dice[0] === row && dice[1] === col){
-					found = true; //find the dice
+					found = true; //Encontrar el dado
 				}
 			}
 			if(found){
@@ -170,8 +161,8 @@ function update_clickable_dice(){
 
 }
 
-var current_word = ""; //show current word
-var err_msg = ""; // show error message
+var current_word = ""; //Mostrar palabra
+var err_msg = ""; // Mostrar mensaje de error
 function submit_word(){
 	if(current_word===""){
 		err_msg = "Necesitas ingresar alguna palabra";
@@ -187,7 +178,7 @@ function submit_word(){
 	}
 	
 	else{
-		current_track = [];//reset current_track
+		current_track = [];//reiniciar current_track
 		callbackword(current_word, (isValid) => {
 			if (isValid) {
 				submitted.add(current_word);
