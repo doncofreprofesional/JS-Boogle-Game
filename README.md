@@ -1,27 +1,25 @@
-# Boggle Game
-Boggle is a popular game. The game is played using a grid of lettered dice, in which players attempt to find words in sequences of adjacent letters.
+# Boggle
+En esta pagina podras jugar al famoso juego Boggle donde deberas formar palabras usando las letras en los dados que iran rotando.
 
-Refreshing the page or click Button 'Restart Game' will randomly generate a Board that each die is displayed in a random position in the grid, and also with a random face to be facing upside.
+Al refrescar la pagina o darle "Reiniciar" comenzara la cuenta hacia atras y deberas formar la mayor cantidad de palabras que puedas en 2 minutos, dependiendo del largo de la palabra sera su valor en puntos.
 
-**following this rule:
-Gameplay involves clicking on dice one by one to build up a word. You can only click on dice that are adjacent to your last selected die and that are not already selected.
-Those dices that can be selected are highlighted in bold orange borders.
+**Reglas:
+Se juega clickeando en un dado para luego continuar seleccionando dados adyacentes y de esa manera formar palabras. Luego de formar una palabra habra que darle al boton "Verificar" y si conseguimos formar una palabra valida que pertenezca al diccionario ingles nos dara puntos dependiendo de la longitud de la palabra. De lo contrario si no conseguimos poner una palabra valida, o en su defecto, ponemos una palbra que ya escribimos actualmente, se restara un punto. ¡Solo tienes 2 minutos para encontrar todas las palabras que puedas!
 
-
-## Running the App
+## Abrir la aplicacion
 
 ```
-Open index.html in your browser and play.
+ir a la URL https://doncofreprofesional.github.io/JS-Boogle-Game/.
 ```
 
-## Built With
+## Hecho con
 
 * Javascript
 * HTML
 * CSS
-* Bootstrap
+* Visual Studio Code
 
 
-## Authors
+## Authores
 
-* **Alex Zhou** - *Initial work* - [LinkedIn](https://www.linkedin.com/in/yuhang-alex-zhou-859a5457/)
+Francisco Sofia y Lucas Cofre
