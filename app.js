@@ -1,4 +1,4 @@
-/* Initialize the Game */
+/* Inicializa el Juego */
 var list = [
 'aaafrs','aaeeee','aafirs','adennn','aeeeem',
 'aeegmu','aegmnn','afirsy','bjkqxz','ccenst',
@@ -9,10 +9,10 @@ var list = [
 let countdown = 120; // Variable para almacenar el intervalo
 let timeLeft = 120;
 let errors = 0;
-var board_generator = []; //2-dimensional array for storing original dice information
-var current_track = []; // keep track of visited dice in selected order
-var clickable = []; // those clickable dice
-var submitted = new Set(); // store submitted words
+var board_generator = []; // Arreglo bidimensional para almacenar los dados originales
+var current_track = []; // Seguimiento de los dados seleccionados en orden
+var clickable = []; // Dados seleccionables
+var submitted = new Set(); // Almacena las palabras enviadas
 
 Counter();
 board_generate();
@@ -20,21 +20,24 @@ board();
 button_event();
 
 
-//genero el tablero
+// Genera el tablero de juego
 function board(){
-	var board = []; // para la
+	var board = [];
 	var board_temp = [];
 	var dice_arr = [];
 	var upside;
 	var row;
 	var character='';
-	shuffle(board_generator);
+	shuffle(board_generator); // Mezcla los dados
+
+	 // Asigna una cara visible a cada dado
 	for(let i=0;i<board_generator.length;i++){
 		dice_arr = board_generator[i];
 		upside = random_face(dice_arr);
 		if(upside==='Q')upside = 'Qu';
 		board_temp.push(upside);
 	}
+	// Organiza los dados en un arreglo bidimensional
 	for(let i=0;i<board_temp.length;i=i+5){
 		line = [];
 		line.push(board_temp[i]);
@@ -45,7 +48,7 @@ function board(){
 		board.push(line);
 	}
 
-	//Renderizar el tablero en HTML
+	// Renderiza el tablero en el HTML
 	for(var row=0;row<4;row++){
 		for(var col=0;col<4;col++){
 			character = board[row][col];
@@ -56,7 +59,7 @@ function board(){
 	}
 
 }
-
+// Genera los dados iniciales
 function board_generate(){
 	var dice;
 	for(let i=0;i<list.length;i++){
@@ -65,7 +68,8 @@ function board_generate(){
 	}
 }
 
-function shuffle(arr){//Funcion para barajar el dado
+// Mezcla un arreglo de manera aleatoria
+function shuffle(arr){
 	var j,temp;
 	for(let i=arr.length;i>0;i--){
 		j=Math.floor(Math.random()*i);
@@ -74,15 +78,15 @@ function shuffle(arr){//Funcion para barajar el dado
 		arr[j] = temp;
 	}
 }
-
-function random_face(arr){//Elegir una cara del dado al azar
+// Selecciona una cara aleatoria de un dado
+function random_face(arr){
 	var index = Math.floor(Math.random()*6);
 	var upside_face = arr[index];
 	return upside_face;
 }
 
 
-// Funciones del juego
+// Agrega eventos a los botones del tablero
 function button_event(){
 	var row,col,text;
 	var events = document.getElementsByClassName('dice');
@@ -115,11 +119,11 @@ function button_event(){
 		after_submit();
 	};
 }
-
-function modify_clickable(clickable,current_track){//Remover los elementos  array current_track
+// Modifica los dados seleccionables excluyendo los seleccionados
+function modify_clickable(clickable,current_track){
 	var dice1 = [];
 	var dice2 = [];
-	var difference = clickable.slice();//hacer una copia del clickable array
+	var difference = clickable.slice();
 	for(let i=clickable.length-1;i>=0;i--){
 		for(let j=0;j<current_track.length;j++){
 			var dice1 = clickable[i];
@@ -131,7 +135,7 @@ function modify_clickable(clickable,current_track){//Remover los elementos  arra
 	}
 	return difference;
 }
-
+// Actualiza los dados seleccionables en el tablero
 function update_clickable_dice(){
 	var events = document.getElementsByClassName('dice');
 	var found = false;
@@ -161,8 +165,10 @@ function update_clickable_dice(){
 
 }
 
-var current_word = ""; //Mostrar palabra
-var err_msg = ""; // Mostrar mensaje de error
+var current_word = ""; // Almacena la palabra actual
+var err_msg = ""; // Almacena el mensaje de error
+
+// Verifica y registra la palabra ingresada
 function submit_word(){
 	if(current_word===""){
 		err_msg = "Necesitas ingresar alguna palabra";
@@ -200,7 +206,7 @@ function submit_word(){
 		
 	}
 }
-
+// Reinicia el tablero después de enviar una palabra
 function after_submit(){
 	var events = document.getElementsByClassName('dice');
 	for(let event of events){
@@ -209,7 +215,7 @@ function after_submit(){
 	current_track = [];
 	update_clickable_dice();
 }
-
+// Actualiza las palabras ingresadas y el puntaje total
 function update_words(){
 	var score;
 	var sum = 0;
@@ -222,7 +228,7 @@ function update_words(){
 	sum -= errors;
 	document.getElementById('total-score').innerHTML = sum;
 }
-
+// Calcula el puntaje de cada palabra según su longitud
 function calculate_score(word){
 	switch(word.length){
 		case 1:
@@ -241,16 +247,17 @@ function calculate_score(word){
 			return 11;
 	}
 }
-
+// Verifica si una posición está dentro de los límites del tablero
 function within_range(row,col){
 	return(row>=0 && row<4 && col>=0 && col<4);
 }
-
+// Define las posiciones adyacentes a un dado
 var ajacent_dice = [
 [-1,-1],[-1,0],[-1,1],
 [0,-1],			[0,1],
 [1,-1],	[1,0],	[1,1]
 ];
+// Calcula las posiciones adyacentes válidas para un dado específico
 function ajacent(row,col){
 	clickable = [];
 	var newrow,newcol;
@@ -262,7 +269,7 @@ function ajacent(row,col){
 		}
 	}
 }
-
+// Verifica si una palabra es válida utilizando un API
 function VerifyWord(word) {
     const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
     
@@ -273,12 +280,13 @@ function VerifyWord(word) {
             return false;
         });
 }
-
+// Callback para procesar la verificación de la palabra
 function callbackword(current_word, callback) {
     VerifyWord(current_word).then(resultado => {
         callback(resultado);
     });
 }
+// Controla el temporizador del juego
   function Counter() {
 	clearInterval(countdown); 
 	document.getElementById('timer').textContent = timeLeft;
@@ -300,7 +308,7 @@ function callbackword(current_word, callback) {
 		}
 	}, 1000); // Intervalo de 1 segundo (1000 ms)
 }
-
+// Configura el inicio del juego
 function StartGame()
 {
 	let nm = document.getElementById('namePlayer').value;
@@ -310,6 +318,7 @@ function StartGame()
 	document.getElementById('startGame').style.display = 'none';
 }
 
+// Maneja el envío de correos electrónicos
 function sendEmail(event) {
 	event.preventDefault(); // Evita que el formulario se envíe de la manera predeterminada
 
