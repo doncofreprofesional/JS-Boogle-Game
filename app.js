@@ -169,43 +169,48 @@ var current_word = ""; // Almacena la palabra actual
 var err_msg = ""; // Almacena el mensaje de error
 
 // Verifica y registra la palabra ingresada
-function submit_word(){
-	if(current_word===""){
-		err_msg = "Necesitas ingresar alguna palabra";
-		document.getElementById('error').innerHTML = err_msg;
-	}else if (current_word.length<3){
-		current_word = "";
-		document.getElementById('current_word').innerHTML = current_word;
-		update_words();
-		err_msg="tenes que poner una palabra de al menos 3 letras, \nte restamos un punto";
-		document.getElementById('error').innerHTML = err_msg;
-		document.getElementById('total-score').value --;
-		errors ++;
-	}
-	
-	else{
-		current_track = [];//reiniciar current_track
-		callbackword(current_word, (isValid) => {
-			if (isValid) {
-				submitted.add(current_word);
-				current_word = "";
-				document.getElementById('current_word').innerHTML = current_word;
-				update_words();
-				document.getElementById('error').innerHTML = '';
-			} else {
-				current_word = "";
-				document.getElementById('current_word').innerHTML = current_word;
-				update_words();
-				err_msg="palabra incorrecta, \nte restamos un punto";
-				document.getElementById('total-score').value --;
-				document.getElementById('error').innerHTML = err_msg;
-				errors++;
-			}
-		});
-		
-		
-	}
+function submit_word() {
+    if (current_word === "") {
+        err_msg = "Necesitas ingresar alguna palabra.";
+        document.getElementById('error').innerHTML = err_msg;
+    } else if (current_word.length < 3) {
+        current_word = "";
+        document.getElementById('current_word').innerHTML = current_word;
+        update_words();
+        err_msg = "Tienes que ingresar una palabra de al menos 3 letras, \nte restamos un punto.";
+        document.getElementById('error').innerHTML = err_msg;
+        document.getElementById('total-score').value--;
+        errors++;
+    } else if (submitted.has(current_word)) {
+        // Si la palabra ya fue ingresada
+        err_msg = "Esta palabra ya fue ingresada. Intenta con otra.";
+        document.getElementById('error').innerHTML = err_msg;
+        current_word = "";
+        document.getElementById('current_word').innerHTML = current_word;
+    } else {
+        current_track = [];
+        callbackword(current_word, (isValid) => {
+            if (isValid) {
+                submitted.add(current_word); // Agregar al conjunto de palabras ingresadas
+                current_word = "";
+                document.getElementById('current_word').innerHTML = current_word;
+                update_words();
+                document.getElementById('error').innerHTML = '';
+            } else {
+                // Palabra inválida
+                submitted.add(current_word); // También se registra para evitar duplicados
+                current_word = "";
+                document.getElementById('current_word').innerHTML = current_word;
+                update_words();
+                err_msg = "Palabra incorrecta, \nte restamos un punto.";
+                document.getElementById('total-score').value--;
+                document.getElementById('error').innerHTML = err_msg;
+                errors++;
+            }
+        });
+    }
 }
+
 // Reinicia el tablero después de enviar una palabra
 function after_submit(){
 	var events = document.getElementsByClassName('dice');
