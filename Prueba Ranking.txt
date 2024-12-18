@@ -1,0 +1,79 @@
+let nombre = document.GetElementById('namePlayer').value();
+let puntaje = document.GetElementById('total-score').value();
+
+
+window.onload = function () {
+      document.getElementById('fileInput').addEventListener('change', leerCSV, false);
+    };
+
+    function leerCSV(event) {
+      var archivo = event.target.files[0];
+
+      if (!archivo) {
+        alert("Por favor selecciona un archivo CSV.");
+        return;
+      }
+
+      var lector = new FileReader();
+
+      lector.onload = function (e) {
+        var contenido = e.target.result;
+        mostrarContenido(contenido);
+      };
+
+      lector.onerror = function () {
+        alert("Error al leer el archivo.");
+      };
+
+      lector.readAsText(archivo);
+    }
+
+    function mostrarContenido(contenido) {
+      var lineas = contenido.split('\n');
+      var salida = '';
+
+      for (var i = 0; i < lineas.length; i++) {
+        var columnas = lineas[i].split(',');
+
+        for (var j = 0; j < columnas.length; j++) {
+          salida += columnas[j] + '\t';
+        }
+
+        salida += '\n';
+      }
+
+      document.getElementById('output').textContent = salida;
+    }
+
+
+
+function guardarCSV() {
+let nombre = document.GetElementById('namePlayer').value();
+let puntaje = document.GetElementById('total-score').value();
+      // Contenido del CSV (formato de ejemplo)
+
+	let arhivo = leerCSV()
+      archivo += "nombre,puntaje\n";
+
+      // Crear un Blob con el contenido del texto en formato CSV
+      var blob = new Blob([texto], { type: 'text/csv;charset=utf-8;' });
+
+      // Crear un enlace temporal
+      var link = document.createElement("a");
+
+      // Compatibilidad con navegadores antiguos
+      if (link.download !== undefined) {
+        var url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", "datos.csv");
+        document.body.appendChild(link);
+
+        // Forzar clic en el enlace para descargar el archivo
+        link.click();
+
+        // Limpiar el enlace temporal
+        document.body.removeChild(link);
+      } else {
+        alert("Tu navegador no soporta la descarga de archivos.");
+      }
+    }
